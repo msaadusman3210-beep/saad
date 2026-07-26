@@ -79,6 +79,11 @@ CREATE TABLE IF NOT EXISTS plans (
   UNIQUE(part_id, date)
 );
 
+CREATE TABLE IF NOT EXISTS app_data (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL
+);
+
 CREATE INDEX IF NOT EXISTS idx_processes_part ON processes(part_id);
 CREATE INDEX IF NOT EXISTS idx_entries_part_process_date ON entries(part_id, process_id, date);
 CREATE INDEX IF NOT EXISTS idx_plans_part_date ON plans(part_id, date);
