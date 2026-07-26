@@ -1,10 +1,20 @@
-// Vercel serverless function handler for Express
+let app;
+
+// Lazy load and cache the Express app
+function getApp() {
+  if (!app) {
+    app = require('../server/src/index.js');
+  }
+  return app;
+}
+
+// Vercel serverless function handler
 module.exports = (req, res) => {
-  // Get the app and handle the request
-  const app = require('../server/src/index.js');
+  const expressApp = getApp();
   
-  // Express expects a full Express instance, so we call it as middleware
-  return app(req, res);
+  // Call Express app as middleware
+  return expressApp(req, res);
 };
+
 
 
