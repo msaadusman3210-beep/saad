@@ -11,6 +11,7 @@ const entriesRoutes = require('./routes/entries');
 const plansRoutes = require('./routes/plans');
 const dashboardRoutes = require('./routes/dashboard');
 const dataRoutes = require('./routes/data');
+const importRoutes = require('./routes/import');
 
 let db;
 try {
@@ -52,6 +53,7 @@ app.use('/api/entries', entriesRoutes);
 app.use('/api/plans', plansRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/data', dataRoutes);
+app.use('/api/import', importRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {
