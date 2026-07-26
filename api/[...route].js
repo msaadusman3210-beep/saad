@@ -1,3 +1,6 @@
 const app = require('../server/src/index.js');
 
-module.exports = app;
+export default function handler(req, res) {
+  return app(req, res);
+}
+

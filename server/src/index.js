@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const bcrypt = require('bcryptjs');
+const { v4: uuidv4 } = require('uuid');
 
 const authRoutes = require('./routes/auth');
 const partsRoutes = require('./routes/parts');
@@ -8,10 +10,28 @@ const machinesRoutes = require('./routes/machines');
 const entriesRoutes = require('./routes/entries');
 const plansRoutes = require('./routes/plans');
 const dashboardRoutes = require('./routes/dashboard');
+const db = require('./db');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Initialize default admin if not exists (for Vercel)
+try {
+  const adminExists = db.prepare('SELECT id FROM users WHERE name = ?').get('Admin');
+  if (!adminExists) {
+    const adminId = uuidv4();
+    db.prepare('INSERT INTO users (id, name, pin_hash, role) VALUES (?,?,?,?)').run(
+      adminId,
+      'Admin',
+      bcrypt.hashSync('1234', 10),
+      'Admin'
+    );
+    console.log('Default admin user created');
+  }
+} catch (err) {
+  console.error('Error initializing default admin:', err);
+}
 
 app.get('/api/health', (req, res) => res.json({ ok: true }));
 
@@ -25,7 +45,7 @@ app.use('/api/dashboard', dashboardRoutes);
 // Basic error handler so a thrown error returns JSON instead of an HTML stack trace.
 app.use((err, req, res, next) => {
   console.error(err);
-  res.status(500).json({ error: 'Internal server error' });
+  res.status(500).json({ error: 'Internal server error', message: err.message });
 });
 
 // Export for Vercel serverless
