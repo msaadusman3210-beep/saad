@@ -2,12 +2,29 @@ const Database = require('better-sqlite3');
 const path = require('path');
 const fs = require('fs');
 
-const dbFile = process.env.DB_FILE || path.join(__dirname, '..', 'data', 'press_shop.db');
-fs.mkdirSync(path.dirname(dbFile), { recursive: true });
+// Use /tmp for Vercel, or local data directory otherwise
+const dbDir = process.env.NODE_ENV === 'production' 
+  ? '/tmp'
+  : path.join(__dirname, '..', 'data');
 
-const db = new Database(dbFile);
-db.pragma('journal_mode = WAL');
-db.pragma('foreign_keys = ON');
+const dbFile = process.env.DB_FILE || path.join(dbDir, 'press_shop.db');
+
+try {
+  fs.mkdirSync(path.dirname(dbFile), { recursive: true });
+} catch (err) {
+  console.error('Failed to create db directory:', err.message);
+}
+
+let db;
+try {
+  db = new Database(dbFile);
+  db.pragma('journal_mode = WAL');
+  db.pragma('foreign_keys = ON');
+  console.log('Database connected:', dbFile);
+} catch (err) {
+  console.error('Failed to connect to database:', err.message);
+  throw err;
+}
 
 db.exec(`
 CREATE TABLE IF NOT EXISTS users (
@@ -68,3 +85,4 @@ CREATE INDEX IF NOT EXISTS idx_plans_part_date ON plans(part_id, date);
 `);
 
 module.exports = db;
+
