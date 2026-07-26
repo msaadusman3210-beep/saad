@@ -1,21 +1,24 @@
 {
   "version": 2,
-  "buildCommand": "npm --prefix client run build",
+  "buildCommand": "npm --prefix client run build && npm --prefix server install",
   "outputDirectory": "client/dist",
-  "builds": [
-    {
-      "src": "server/src/index.js",
-      "use": "@vercel/node"
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "functions": {
+    "api/[...route].js": {
+      "memory": 1024,
+      "maxDuration": 60
     }
-  ],
-  "routes": [
+  },
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "server/src/index.js"
+      "source": "/api/:path*",
+      "destination": "/api/[...route].js"
     },
     {
-      "src": "/(.*)",
-      "dest": "client/dist/$1"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
