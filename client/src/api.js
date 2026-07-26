@@ -66,4 +66,9 @@ export const api = {
 
   getDashboard: (date) => request('/dashboard?date=' + date),
   getWip: (date) => request('/dashboard/wip?date=' + date),
+
+  importJuly: () => request('/import/import-july', { method: 'POST' }),
+  exportEntriesCsv: () => request('/data/export/entries'),
+  exportPartsCsv: () => request('/data/export/parts'),
+  resetData: () => request('/data/reset', { method: 'POST' }),
 };

@@ -6,6 +6,7 @@ const TABS = [
   { id: 'parts', label: 'Parts & Processes' },
   { id: 'machines', label: 'Machines' },
   { id: 'wip', label: 'WIP Report' },
+  { id: 'settings', label: 'Settings' },
 ];
 
 export default function Sidebar({ active, onChange, user, onSignOut, theme, onToggleTheme }) {

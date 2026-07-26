@@ -6,6 +6,7 @@ import DailyEntry from './pages/DailyEntry.jsx';
 import Parts from './pages/Parts.jsx';
 import Machines from './pages/Machines.jsx';
 import WipReport from './pages/WipReport.jsx';
+import Settings from './pages/Settings.jsx';
 import { api } from './api.js';
 
 export default function App() {
@@ -52,6 +53,7 @@ export default function App() {
           {tab === 'parts' && <Parts />}
           {tab === 'machines' && <Machines />}
           {tab === 'wip' && <WipReport />}
+          {tab === 'settings' && <Settings user={user} />}
         </main>
         <footer>Press Shop Production Manager &middot; React + Node backend</footer>
       </div>
